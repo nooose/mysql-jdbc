@@ -9,16 +9,10 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class MemberWriteService {
+public class MemberReadService {
     private final MemberRepository memberRepository;
 
-    public MemberDto register(RegisterMemberCommand command) {
-        var member = Member.builder()
-                .nickname(command.nickname())
-                .email(command.email())
-                .birthDay(command.birthday())
-                .build();
-
-        return MemberDto.of(memberRepository.save(member));
+    public MemberDto getMember(Long id) {
+        return MemberDto.of(memberRepository.findById(id).orElseThrow());
     }
 }
