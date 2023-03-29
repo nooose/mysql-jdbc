@@ -16,6 +16,6 @@ public record MemberDto(
                 member.getId(),
                 member.getEmail(),
                 member.getNickname(),
-                member.getBirthDay());
+                member.getBirthday());
     }
 }

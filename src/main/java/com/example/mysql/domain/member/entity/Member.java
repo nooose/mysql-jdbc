@@ -15,14 +15,14 @@ public class Member {
     private final Long id;
     private String nickname;
     private final String email;
-    private final LocalDate birthDay;
+    private final LocalDate birthday;
     private final LocalDateTime createdAt;
 
     @Builder
-    public Member(Long id, String nickname, String email, LocalDate birthDay, LocalDateTime createdAt) {
+    public Member(Long id, String nickname, String email, LocalDate birthday, LocalDateTime createdAt) {
         this.id = id;
         this.email = Objects.requireNonNull(email);
-        this.birthDay = Objects.requireNonNull(birthDay);
+        this.birthday = Objects.requireNonNull(birthday);
         validateNickname(nickname);
         this.nickname = Objects.requireNonNull(nickname);
         this.createdAt = Objects.requireNonNullElse(createdAt, LocalDateTime.now());
