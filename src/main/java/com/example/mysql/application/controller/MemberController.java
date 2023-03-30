@@ -1,4 +1,4 @@
-package com.example.mysql.controller;
+package com.example.mysql.application.controller;
 
 import com.example.mysql.domain.member.dto.MemberDto;
 import com.example.mysql.domain.member.dto.MemberNicknameHistoryDto;

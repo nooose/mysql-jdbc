@@ -28,4 +28,11 @@ public class MemberReadService {
                 .map(MemberNicknameHistoryDto::of)
                 .toList();
     }
+
+    public List<MemberDto> getMembers(List<Long> ids) {
+        return memberRepository.findAllByIdIn(ids)
+                .stream()
+                .map(MemberDto::of)
+                .toList();
+    }
 }
