@@ -6,9 +6,10 @@ import com.example.mysql.domain.post.dto.PostCommand;
 import com.example.mysql.domain.post.entity.Post;
 import com.example.mysql.domain.post.service.PostReadService;
 import com.example.mysql.domain.post.service.PostWriteService;
+import com.example.mysql.util.CursorRequest;
+import com.example.mysql.util.PageCursor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,5 +42,12 @@ public class PostController {
             @PathVariable Long memberId,
             Pageable pageable) {
         return postReadService.getPosts(memberId, pageable);
+    }
+
+    @GetMapping("/members/{memberId}/by-cursor")
+    public PageCursor<Post> getPostsByCursor(
+            @PathVariable Long memberId,
+            CursorRequest cursorRequest) {
+        return postReadService.getPosts(memberId, cursorRequest);
     }
 }
