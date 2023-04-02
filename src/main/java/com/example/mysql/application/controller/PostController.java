@@ -1,5 +1,6 @@
 package com.example.mysql.application.controller;
 
+import com.example.mysql.application.usecase.CreatePostUsecase;
 import com.example.mysql.application.usecase.GetTimelinePostsUsecase;
 import com.example.mysql.domain.post.dto.DailyPostCount;
 import com.example.mysql.domain.post.dto.DailyPostCountRequest;
@@ -28,10 +29,11 @@ public class PostController {
     private final PostWriteService postWriteService;
     private final PostReadService postReadService;
     private final GetTimelinePostsUsecase getTimelinePostsUsecase;
+    private final CreatePostUsecase createPostUsecase;
 
     @PostMapping
     public Long create(@RequestBody PostCommand command) {
-        return postWriteService.create(command);
+        return createPostUsecase.execute(command);
     }
 
     @GetMapping("/daily-post-counts")
@@ -57,6 +59,6 @@ public class PostController {
     public PageCursor<Post> getTimeline(
             @PathVariable Long memberId,
             CursorRequest cursorRequest) {
-        return getTimelinePostsUsecase.execute(memberId, cursorRequest);
+        return getTimelinePostsUsecase.executeByTimeline(memberId, cursorRequest);
     }
 }

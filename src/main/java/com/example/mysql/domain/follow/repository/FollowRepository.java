@@ -31,6 +31,12 @@ public class FollowRepository {
         return namedParameterJdbcTemplate.query(sql, params, ROW_MAPPER);
     }
 
+    public List<Follow> findAllByToMemberId(Long toMemberId) {
+        var sql = String.format("SELECT * FROM %s WHERE toMemberId = :toMemberId", TABLE);
+        var params = new MapSqlParameterSource().addValue("toMemberId", toMemberId);
+        return namedParameterJdbcTemplate.query(sql, params, ROW_MAPPER);
+    }
+
     public void save(Follow follow) {
         if (follow.getId() != null) {
             throw new UnsupportedOperationException("Follow는 갱신을 지원하지 않습니다");
