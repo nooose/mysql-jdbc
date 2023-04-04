@@ -7,6 +7,7 @@ import com.example.mysql.domain.post.service.PostWriteService;
 import com.example.mysql.domain.post.service.TimelineWriteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -15,6 +16,7 @@ public class CreatePostUsecase {
     private final FollowReadService followReadService;
     private final TimelineWriteService timelineWriteService;
 
+    @Transactional
     public Long execute(PostCommand postCommand) {
         var postId = postWriteService.create(postCommand);
 
