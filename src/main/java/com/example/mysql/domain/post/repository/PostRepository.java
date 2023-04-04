@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -36,6 +37,7 @@ public class PostRepository {
             .contents(resultSet.getString("contents"))
             .createdDate(resultSet.getObject("createdDate", LocalDate.class))
             .createdAt(resultSet.getObject("createdAt", LocalDateTime.class))
+            .likeCount(resultSet.getLong("likeCount"))
             .build();
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -158,9 +160,23 @@ public class PostRepository {
         return namedParameterJdbcTemplate.query(sql, params, ROW_MAPPER);
     }
 
+    public Optional<Post> findById(Long postId, Boolean requiredLock) {
+        var sql = String.format("""
+                SELECT *
+                FROM %s
+                WHERE id = :postId
+                """, TABLE);
+        if (requiredLock) {
+            sql += "FOR UPDATE";
+        }
+
+        var params = new MapSqlParameterSource().addValue("postId", postId);
+        return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, params, ROW_MAPPER));
+    }
+
     public Post save(Post post) {
         if (post.getId() != null) {
-            throw new UnsupportedOperationException("Post는 갱신을 지원하지 않습니다.");
+            return update(post);
         }
 
         return insert(post);
@@ -194,5 +210,19 @@ public class PostRepository {
                 .createdDate(post.getCreatedDate())
                 .createdAt(post.getCreatedAt())
                 .build();
+    }
+
+    private Post update(Post post) {
+        var sql = String.format("""
+                UPDATE %s SET memberId = :memberId,
+                contents = :contents,
+                createdDate = :createdDate,
+                likeCount = :likeCount,
+                createdAt = :createdAt
+                WHERE id = :id
+                """, TABLE);
+        var params = new BeanPropertySqlParameterSource(post);
+        namedParameterJdbcTemplate.update(sql, params);
+        return post;
     }
 }
