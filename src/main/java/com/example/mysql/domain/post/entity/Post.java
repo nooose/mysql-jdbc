@@ -14,15 +14,17 @@ public class Post {
     private final String contents;
     private final LocalDate createdDate;
     private Long likeCount;
+    private Long version;
     private final LocalDateTime createdAt;
 
     @Builder
-    public Post(Long id, Long memberId, String contents, LocalDate createdDate, Long likeCount, LocalDateTime createdAt) {
+    public Post(Long id, Long memberId, String contents, LocalDate createdDate, Long likeCount, Long version, LocalDateTime createdAt) {
         this.id = id;
         this.memberId = Objects.requireNonNull(memberId);
         this.contents = Objects.requireNonNull(contents);
         this.createdDate = Objects.requireNonNullElse(createdDate, LocalDate.now());
         this.likeCount = Objects.requireNonNullElse(likeCount, 0L);
+        this.version = Objects.requireNonNullElse(version, 0L);
         this.createdAt = Objects.requireNonNullElse(createdAt, LocalDateTime.now());
     }
 
