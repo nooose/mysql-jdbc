@@ -2,7 +2,9 @@ package com.example.mysql.domain.post.service;
 
 import com.example.mysql.domain.post.dto.DailyPostCount;
 import com.example.mysql.domain.post.dto.DailyPostCountRequest;
+import com.example.mysql.domain.post.dto.PostDto;
 import com.example.mysql.domain.post.entity.Post;
+import com.example.mysql.domain.post.repository.PostLikeRepository;
 import com.example.mysql.domain.post.repository.PostRepository;
 import com.example.mysql.util.CursorRequest;
 import com.example.mysql.util.PageCursor;
@@ -17,13 +19,15 @@ import java.util.List;
 @Service
 public class PostReadService {
     private final PostRepository postRepository;
+    private final PostLikeRepository postLikeRepository;
 
     public List<DailyPostCount> getDailyPostCounts(DailyPostCountRequest request) {
         return postRepository.groupByCreatedDate(request);
     }
 
-    public Page<Post> getPosts(Long memberId, Pageable pageRequest) {
-        return postRepository.findAllByMemberId(memberId, pageRequest);
+    public Page<PostDto> getPosts(Long memberId, Pageable pageRequest) {
+        return postRepository.findAllByMemberId(memberId, pageRequest)
+                .map(post -> PostDto.of(post, postLikeRepository.count(post.getId())));
     }
 
     public PageCursor<Post> getPosts(Long memberId, CursorRequest cursorRequest) {
@@ -47,6 +51,10 @@ public class PostReadService {
 
     public List<Post> getPosts(List<Long> ids) {
         return postRepository.findAllByInId(ids);
+    }
+
+    public Post getPost(Long postId) {
+        return postRepository.findById(postId, false).orElseThrow();
     }
 
     private List<Post> findAllBy(Long memberId, CursorRequest cursorRequest) {
